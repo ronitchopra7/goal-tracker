@@ -1,13 +1,14 @@
 interface ChecklistItemRowProps {
   text: string;
   completed: boolean;
+  checkmarkStyle: string;
   onToggle: () => void;
   onDelete: () => void;
 }
 
-export function ChecklistItemRow({ text, completed, onToggle, onDelete }: ChecklistItemRowProps) {
+export function ChecklistItemRow({ text, completed, checkmarkStyle, onToggle, onDelete }: ChecklistItemRowProps) {
   return (
-    <li className={`checklist-item ${completed ? 'checklist-done' : ''}`}>
+    <li className={`checklist-item ${completed ? 'checklist-done' : ''} ${checkmarkStyle}`}>
       <button
         type="button"
         className="checklist-check"

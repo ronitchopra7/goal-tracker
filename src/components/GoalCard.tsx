@@ -6,6 +6,7 @@ import { ChecklistItemRow } from './ChecklistItemRow';
 
 interface GoalCardProps {
   goal: Goal;
+  checkmarkStyle: string;
   onAddItem: (text: string) => void;
   onToggleItem: (itemId: string) => void;
   onDeleteItem: (itemId: string) => void;
@@ -15,6 +16,7 @@ interface GoalCardProps {
 
 export function GoalCard({
   goal,
+  checkmarkStyle,
   onAddItem,
   onToggleItem,
   onDeleteItem,
@@ -92,6 +94,7 @@ export function GoalCard({
                 key={item.id}
                 text={item.text}
                 completed={item.completed}
+                checkmarkStyle={checkmarkStyle}
                 onToggle={() => onToggleItem(item.id)}
                 onDelete={() => onDeleteItem(item.id)}
               />

@@ -5,13 +5,15 @@ import { GoalCard } from './components/GoalCard';
 import { GoalForm } from './components/GoalForm';
 import { HelpModal } from './components/HelpModal';
 import { LevelUpModal } from './components/LevelUpModal';
+import { Marketplace } from './components/Marketplace';
 import { Mascot } from './components/Mascot';
 import { StatsBar } from './components/StatsBar';
 import { Toast } from './components/Toast';
 import { useAppState } from './hooks/useAppState';
+import { getBadgeIcon, useCustomization } from './hooks/useCustomization';
 import { goalProgress } from './utils/gamification';
 
-type Tab = 'quests' | 'achievements';
+type Tab = 'quests' | 'achievements' | 'marketplace';
 
 function App() {
   const {
@@ -30,11 +32,19 @@ function App() {
     toggleChecklistItem,
     deleteChecklistItem,
     claimDailyQuest,
+    purchaseItem,
+    equipItem,
   } = useAppState();
 
   const [tab, setTab] = useState<Tab>('quests');
   const [showArchived, setShowArchived] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
+
+  const { inventory } = data.game;
+  const checkmarkStyle = inventory.equipped.checkmark;
+  const badgeIcon = getBadgeIcon(inventory.equipped.badge);
+
+  useCustomization(inventory.equipped, checkmarkStyle);
 
   const overallProgress =
     activeGoals.length === 0
@@ -53,7 +63,14 @@ function App() {
         <div className="brand">
           <span className="brand-icon">📔</span>
           <div>
-            <h1>QuestLog</h1>
+            <h1>
+              QuestLog
+              {badgeIcon && (
+                <span className="brand-badge" title="Equipped badge">
+                  {badgeIcon}
+                </span>
+              )}
+            </h1>
             <p className="brand-tagline">Cozy goals, real progress</p>
           </div>
         </div>
@@ -72,6 +89,13 @@ function App() {
               onClick={() => setTab('achievements')}
             >
               Achievements
+            </button>
+            <button
+              type="button"
+              className={`tab-btn ${tab === 'marketplace' ? 'tab-active' : ''}`}
+              onClick={() => setTab('marketplace')}
+            >
+              Shop
             </button>
           </nav>
           <button
@@ -98,7 +122,12 @@ function App() {
         {tab === 'quests' ? (
           <>
             <aside className="sidebar">
-              <Mascot game={data.game} goals={activeGoals} />
+              <Mascot
+                game={data.game}
+                goals={activeGoals}
+                sceneId={inventory.equipped.mascot}
+                frameId={inventory.equipped.frame}
+              />
               <DailyQuests quests={todayQuests} onClaim={claimDailyQuest} />
 
               <section className="panel overview-panel">
@@ -144,6 +173,7 @@ function App() {
                     <GoalCard
                       key={goal.id}
                       goal={goal}
+                      checkmarkStyle={checkmarkStyle}
                       onAddItem={(text) => addChecklistItem(goal.id, text)}
                       onToggleItem={(itemId) => toggleChecklistItem(goal.id, itemId)}
                       onDeleteItem={(itemId) => deleteChecklistItem(goal.id, itemId)}
@@ -169,6 +199,7 @@ function App() {
                         <GoalCard
                           key={goal.id}
                           goal={goal}
+                          checkmarkStyle={checkmarkStyle}
                           onAddItem={(text) => addChecklistItem(goal.id, text)}
                           onToggleItem={(itemId) => toggleChecklistItem(goal.id, itemId)}
                           onDeleteItem={(itemId) => deleteChecklistItem(goal.id, itemId)}
@@ -182,15 +213,25 @@ function App() {
               )}
             </section>
           </>
-        ) : (
+        ) : tab === 'achievements' ? (
           <div className="achievements-page">
             <AchievementsPanel achievements={unlockedAchievements} />
+          </div>
+        ) : (
+          <div className="marketplace-page">
+            <Marketplace
+              coins={data.game.coins}
+              owned={inventory.owned}
+              equipped={inventory.equipped}
+              onPurchase={purchaseItem}
+              onEquip={equipItem}
+            />
           </div>
         )}
       </main>
 
       <footer className="site-footer">
-        <p>Progress saved locally · Complete tasks to earn XP, streaks & achievements</p>
+        <p>Progress saved locally · Earn coins from tasks and spend them in the Shop</p>
       </footer>
 
       {toast && <Toast message={toast.message} type={toast.type} />}

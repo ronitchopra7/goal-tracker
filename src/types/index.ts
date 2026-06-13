@@ -1,6 +1,11 @@
 export type GoalCategory = 'health' | 'career' | 'learning' | 'personal' | 'creative';
 export type GoalPriority = 'low' | 'medium' | 'high';
 
+export type { EquippedItems, Inventory, ShopCategory, ShopItem, ShopRarity } from './marketplace';
+export { CATEGORY_LABELS, DEFAULT_EQUIPPED } from './marketplace';
+
+import type { Inventory } from './marketplace';
+
 export interface ChecklistItem {
   id: string;
   text: string;
@@ -24,11 +29,15 @@ export interface Goal {
   completionRewarded?: boolean;
 }
 
+export type AchievementTier = 'common' | 'rare' | 'epic' | 'legendary';
+
 export interface Achievement {
   id: string;
   title: string;
   description: string;
   icon: string;
+  tier?: AchievementTier;
+  secret?: boolean;
   unlockedAt?: string;
 }
 
@@ -54,6 +63,7 @@ export interface GameState {
   achievements: Achievement[];
   dailyQuests: DailyQuest[];
   tasksCompletedToday: number;
+  inventory: Inventory;
 }
 
 export interface AppData {

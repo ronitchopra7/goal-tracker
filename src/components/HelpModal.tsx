@@ -20,8 +20,8 @@ const SECTIONS = [
   },
   {
     icon: '🪙',
-    title: 'Coins',
-    body: 'Earn +5 coins per task, +50 when you fully finish a quest, +15 when you claim a daily quest, and +25 when you unlock an achievement.',
+    title: 'Coins & Shop',
+    body: 'Earn +5 coins per task, +50 when you fully finish a quest, +15 when you claim a daily quest, and +25 to +75 from achievements. Spend coins in the Shop tab on themes, mascot scenes, frames, checkmark styles, and title badges!',
   },
   {
     icon: '🌅',
@@ -31,7 +31,7 @@ const SECTIONS = [
   {
     icon: '🏅',
     title: 'Achievements',
-    body: 'Unlock badges by hitting milestones — first task, 7-day streak, 100 tasks done, reaching level 10, and more. View them on the Achievements tab.',
+    body: 'Unlock 46 badges across Common, Rare, Epic, and Legendary tiers — streaks, task milestones, secret time-based feats, and more. Some are hidden until you discover them. Higher tiers award more coins!',
   },
   {
     icon: '💎',

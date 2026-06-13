@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useLocalStorage } from './useLocalStorage';
+import { getShopItem } from '../data/marketplace';
 import type { Achievement, AppData, ChecklistItem, Goal, GoalCategory, GoalPriority } from '../types';
 import { PRIORITY_XP } from '../types';
 import {
@@ -248,6 +249,55 @@ export function useAppState() {
     [processGameUpdate, showToast],
   );
 
+  const purchaseItem = useCallback(
+    (itemId: string) => {
+      setData((prev) => {
+        const item = getShopItem(itemId);
+        if (!item || item.starter) return prev;
+        if (prev.game.inventory.owned.includes(itemId)) return prev;
+        if (prev.game.coins < item.price) return prev;
+
+        showToast(`${item.icon} Purchased ${item.name}!`, 'xp');
+        return {
+          ...prev,
+          game: {
+            ...prev.game,
+            coins: prev.game.coins - item.price,
+            inventory: {
+              ...prev.game.inventory,
+              owned: [...prev.game.inventory.owned, itemId],
+            },
+          },
+        };
+      });
+    },
+    [setData, showToast],
+  );
+
+  const equipItem = useCallback(
+    (itemId: string) => {
+      setData((prev) => {
+        const item = getShopItem(itemId);
+        if (!item) return prev;
+        if (!prev.game.inventory.owned.includes(itemId) && !item.starter) return prev;
+
+        const slot = item.category === 'mascot' ? 'mascot' : item.category;
+        showToast(`${item.icon} Equipped ${item.name}!`, 'xp');
+        return {
+          ...prev,
+          game: {
+            ...prev.game,
+            inventory: {
+              ...prev.game.inventory,
+              equipped: { ...prev.game.inventory.equipped, [slot]: itemId },
+            },
+          },
+        };
+      });
+    },
+    [setData, showToast],
+  );
+
   const xpProgress = useMemo(() => xpProgressInLevel(data.game.xp), [data.game.xp]);
 
   const activeGoals = useMemo(() => data.goals.filter((g) => !g.archived), [data.goals]);
@@ -278,5 +328,7 @@ export function useAppState() {
     toggleChecklistItem,
     deleteChecklistItem,
     claimDailyQuest,
+    purchaseItem,
+    equipItem,
   };
 }
