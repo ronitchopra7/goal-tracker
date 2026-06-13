@@ -146,3 +146,4 @@ goal-tracker/
 ## License
 
 Private project — use and modify as you like locally.
+
