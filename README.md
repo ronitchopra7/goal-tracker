@@ -1,5 +1,7 @@
 # QuestLog — Cozy Goal Tracker
 
+To help people stay accountable for their goals in a fun and gamified manner!
+
 A gamified goal accountability app with a warm, cozy aesthetic. Break goals into checklists, earn XP, build streaks, and unlock achievements.
 
 ## Features
